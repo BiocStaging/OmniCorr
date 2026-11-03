@@ -4,11 +4,19 @@ bibentry(
   author = c(
     person("Shashank", "Gupta"),
     person("Veronica", "Quarato"),
-    person("Wanxin", "Lai")
+    person("Wanxin", "Lai"),
+    person("Carl M", "Kobel"),
+    person("Velma T E", "Aho"),
+    person("Arturo", "Vera-Ponce de León"),
+    person("Sabina", "Leanti La Rosa"),
+    person("Simen R", "Sandve"),
+    person("Phillip B", "Pope"),
+    person("Torgeir R", "Hvidsten")
   ),
   journal = "Bioinformatics Advances",
   year = 2026,
   volume = "6",
   number = "1",
+  pages = "vbag057",
   doi = "10.1093/bioadv/vbag057"
 )

@@ -6,13 +6,13 @@
 \alias{OmniCorr-package}
 \title{OmniCorr: Multi-omics Integration and Visualization Framework}
 \description{
-OmniCorr is an R package-style framework for correlation-based integration and visualization of multi-omics datasets, including transcriptomics, metatranscriptomics, metagenomics, metaproteomics, and associated sample metadata. The package computes pairwise correlations between independently processed omics layers and provides flexible tools for organizing and visualizing cross-omics associations using aligned heatmaps and optional network-style visualizations. OmniCorr is designed to complement existing preprocessing and network inference workflows rather than replace them.
+OmniCorr is an R package for correlation-based integration and visualization of multi-omics datasets, including transcriptomics, metatranscriptomics, metagenomics, metaproteomics, and associated sample metadata. The package computes pairwise correlations between independently processed omics layers and provides flexible tools for organizing and visualizing cross-omics associations using aligned heatmaps and optional network-style visualizations. OmniCorr is designed to complement existing preprocessing and network inference workflows rather than replace them.
 }
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/shashank-KU/OmniCorr}
-  \item Report bugs at \url{https://github.com/shashank-KU/OmniCorr/issues}
+  \item \url{https://github.com/veronicaquarato/OmniCorr}
+  \item Report bugs at \url{https://github.com/veronicaquarato/OmniCorr/issues}
 }
 
 }
@@ -24,6 +24,13 @@ Authors:
   \item Veronica Quarato \email{vequa7472@nmbu.no} (\href{https://orcid.org/0009-0008-4049-9746}{ORCID})
   \item Shashank Gupta \email{bioinformaticssrm2011@gmail.com} (\href{https://orcid.org/0000-0001-8839-7003}{ORCID})
   \item Wanxin Lai
+}
+
+Other contributors:
+\itemize{
+  \item Research Council of Norway (Project 300846) [funder]
+  \item European Union (Horizon 2020 ERA-Net Cofund BlueBio (311913); MSCA DN HoloGen (101169005)) [funder]
+  \item Novo Nordisk Foundation (Project 0054575-SuPAcow) [funder]
 }
 
 }

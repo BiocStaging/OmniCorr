@@ -13,38 +13,32 @@
 #' @param reference_layer Numeric matrix/data.frame (samples x features).
 #' @param comparison_layers Named list of numeric matrices/data.frames.
 #' @param metadata Optional numeric matrix/data.frame (samples x variables).
+#'   Default is NULL.
 #' @param reference_name Title for the reference heatmap.
+#'   Default is "Reference Layer".
 #' @param comparison_names Optional titles for comparison heatmaps.
-#' @param metadata_name Title for metadata heatmap.
-#' @param method Correlation method: `"pearson"`, `"spearman"`, `"kendall"`.
-#' @param adjust_method P-value correction method (`stats::p.adjust.methods`).
-#' @param use Missing value handling strategy (`"all.obs"` or `"pairwise.complete.obs"`).
-#' @param show_significance `"stars"`, `"p_value"`, or `"correlation"`.
+#'   Default is NULL.
+#' @param metadata_name Title for metadata heatmap. Default is "Metadata".
+#' @param method Correlation method: "pearson", "spearman", or "kendall".
+#'   Default is "pearson".
+#' @param adjust_method P-value correction method (stats::p.adjust.methods).
+#'   Default is "fdr".
+#' @param use Missing value handling: "all.obs" or "pairwise.complete.obs".
+#'   Default is "all.obs". If missing values are detected, the function
+#'   automatically switches to "pairwise.complete.obs" with a warning.
+#' @param show_significance "stars", "p_value", or "correlation".
+#'   Default is "stars".
 #' @param cluster_reference_rows Cluster reference features.
+#'   Default is TRUE.
 #' @param cluster_reference_columns Cluster reference samples.
-#' @param show_row_names Logical; display row labels.
-#' @param show_column_names Logical; display column labels.
-#' @param font_size Font size for row/column labels.
-#' @param star_font_size Font size for cell annotations.
-#' @param verbose Print progress messages.
+#'   Default is TRUE.
+#' @param show_row_names Logical; display row labels. Default is TRUE.
+#' @param show_column_names Logical; display column labels. Default is TRUE.
+#' @param font_size Font size for row/column labels. Default is 8.
+#' @param star_font_size Font size for cell annotations. Default is 8.
+#' @param verbose Print progress messages. Default is TRUE.
 #'
 #' @return Invisibly returns a `ComplexHeatmap::HeatmapList`.
-#'
-#' @examples
-#' reference <- matrix(
-#'   rnorm(20),
-#'   nrow = 5,
-#'   dimnames = list(paste0("S", 1:5), paste0("Gene", 1:4))
-#' )
-#' comparison <- matrix(
-#'   rnorm(15),
-#'   nrow = 5,
-#'   dimnames = list(paste0("S", 1:5), paste0("Taxon", 1:3))
-#' )
-#' result <- run_omnicorr(
-#'   reference_layer = reference,
-#'   comparison_layers = list(Microbiome = comparison)
-#' )
 #'
 #' @importFrom ComplexHeatmap Heatmap draw
 #' @importFrom circlize colorRamp2
@@ -52,6 +46,29 @@
 #' @importFrom stats cor hclust as.dist
 #' @importFrom grDevices colorRampPalette
 #'
+#' @examples
+#' # Create example datasets with matching sample IDs
+#' set.seed(123)
+#' samples <- paste0("Sample", 1:10)
+#'
+#' reference <- matrix(
+#'   rnorm(10 * 5),
+#'   nrow = 10,
+#'   dimnames = list(samples, paste0("Ref", 1:5))
+#' )
+#'
+#' comparison <- matrix(
+#'   rnorm(10 * 4),
+#'   nrow = 10,
+#'   dimnames = list(samples, paste0("Comp", 1:4))
+#' )
+#'
+#' # Generate the multi-omics heatmap
+#' heatmap <- run_omnicorr(
+#'   reference_layer = reference,
+#'   comparison_layers = list(Proteomics = comparison),
+#'   verbose = FALSE
+#' )
 #' @export
 run_omnicorr <- function(
     reference_layer,
@@ -60,10 +77,10 @@ run_omnicorr <- function(
     reference_name = "Reference Layer",
     comparison_names = NULL,
     metadata_name = "Metadata",
-    method = "pearson",
-    adjust_method = "fdr",
-    use = "all.obs",
-    show_significance = "stars",
+    method = c("pearson", "spearman", "kendall"),
+    adjust_method = c("fdr", setdiff(stats::p.adjust.methods, "fdr")),
+    use = c("all.obs", "pairwise.complete.obs"),
+    show_significance = c("stars", "p_value", "correlation"),
     cluster_reference_rows = TRUE,
     cluster_reference_columns = TRUE,
     show_row_names = TRUE,
@@ -72,21 +89,10 @@ run_omnicorr <- function(
     star_font_size = 8,
     verbose = TRUE
 ){
-  
-  required_pkgs <- c("ComplexHeatmap","circlize","RColorBrewer","grid")
-  
-  for(pkg in required_pkgs){
-    if(!requireNamespace(pkg, quietly = TRUE)){
-      stop(sprintf("Package '%s' must be installed.", pkg))
-    }
-  }
-  
-  method <- match.arg(method, c("pearson","spearman","kendall"))
-  use <- match.arg(use, c("all.obs","pairwise.complete.obs"))
-  show_significance <- match.arg(show_significance,
-                                 c("stars","p_value","correlation"))
-  adjust_method <- match.arg(adjust_method,
-                             c("none", stats::p.adjust.methods))
+  method <- match.arg(method)
+  use <- match.arg(use)
+  show_significance <- match.arg(show_significance)
+  adjust_method <- match.arg(adjust_method)
   
   reference_layer <- as.matrix(reference_layer)
   
@@ -126,7 +132,7 @@ run_omnicorr <- function(
   
   if(use == "all.obs"){
     if(anyNA(reference_layer) ||
-       any(vapply(comparison_layers, anyNA, logical(1))) || 
+       any(vapply(comparison_layers, anyNA, logical(1))) ||
        (!is.null(metadata) && anyNA(metadata))){
       warning("Missing values detected. Switching to 'pairwise.complete.obs'.")
       use <- "pairwise.complete.obs"

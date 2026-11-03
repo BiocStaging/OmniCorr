@@ -2,7 +2,6 @@
 
 export(CheckSampleOrder)
 export(calculate_correlations)
-export(metadata)
 export(run_omnicorr)
 importFrom(ComplexHeatmap,
   Heatmap,

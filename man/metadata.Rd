@@ -25,17 +25,19 @@ A data frame with 14 variables:
 \source{
 Information was collected from the study samples.
 }
-\usage{
-metadata
-}
 \value{
-A data frame containing sample metadata.
+A data frame containing 36 samples (rows) and
+14 metadata variables (columns).
 }
 \description{
 This data frame contains information about the samples used in the study.
 }
+\details{
+Sample metadata from the salmon multi-omics study.
+The dataset contains 36 samples and 14 variables.
+Rows represent samples, identified by sample IDs.
+}
 \examples{
-# View the first few rows of the metadata
+data("metadata", package = "OmniCorr")
 head(metadata)
-
 }

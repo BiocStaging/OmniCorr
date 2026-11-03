@@ -14,10 +14,10 @@
 #' @param adjust_method Method for adjusting the p-values for multiple
 #'   testing. Default is "fdr". If "none", no adjustment is applied.
 #'   Supports all methods from \code{p.adjust.methods}.
-#' @param use Handling of missing data. One of "all.obs" or
-#'   "pairwise.complete.obs".
+#' @param use Handling of missing data. Default is "all.obs".
+#'   One of "all.obs" or "pairwise.complete.obs".
 #' @param show_significance How to represent significance in the output.
-#'   One of "stars", "p_value", or "correlation".
+#'   Default is "stars". One of "stars", "p_value", or "correlation".
 #'
 #' @return A list containing:
 #' \item{correlation}{Matrix of correlation coefficients (rounded to 3 decimals).}
@@ -46,15 +46,11 @@
 calculate_correlations <- function(
     df1,
     df2,
-    method = "pearson",
-    adjust_method = "fdr",
-    use = "all.obs",
-    show_significance = "stars"
+    method = c("pearson", "spearman", "kendall"),
+    adjust_method = c("fdr", setdiff(stats::p.adjust.methods, "fdr")),
+    use = c("all.obs", "pairwise.complete.obs"),
+    show_significance = c("stars", "p_value", "correlation")
 ) {
-  
-  if (!requireNamespace("WGCNA", quietly = TRUE)) {
-    stop("Package 'WGCNA' must be installed.")
-  }
   
   if (!is.data.frame(df1) && !is.matrix(df1)) {
     stop("df1 must be a data frame or matrix.")
@@ -66,16 +62,10 @@ calculate_correlations <- function(
     stop("df1 and df2 must have the same number of rows (samples).")
   }
   
-  method <- match.arg(method, c("pearson", "spearman", "kendall"))
-  use <- match.arg(use, c("all.obs", "pairwise.complete.obs"))
-  adjust_method <- match.arg(
-    adjust_method,
-    c("none", stats::p.adjust.methods)
-  )
-  show_significance <- match.arg(
-    show_significance,
-    c("stars", "p_value", "correlation")
-  )
+  method <- match.arg(method)
+  use <- match.arg(use)
+  adjust_method <- match.arg(adjust_method)
+  show_significance <- match.arg(show_significance)
   
   combined_data <- cbind(df1, df2)
   

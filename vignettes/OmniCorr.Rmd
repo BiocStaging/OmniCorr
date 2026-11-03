@@ -1,22 +1,113 @@
 ---
-title: "OmniCorr"
+title: "Introduction to OmniCorr"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{OmniCorr}
+  %\VignetteIndexEntry{Introduction to OmniCorr}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r knitr-setup, include = FALSE}
+```{r knitr-setup, include=FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
 ```
 
+## Introduction
+
+OmniCorr is an R package for exploring relationships between multiple omics datasets through correlation analysis and visualization.
+
+The package integrates a reference omics layer with one or more comparison layers and optional sample metadata. Results are visualized as aligned heatmaps using the `ComplexHeatmap` package.
+
+The main functions are:
+
+- `calculate_correlations()`: Calculates correlations between two datasets.
+- `run_omnicorr()`: Integrates multiple datasets and visualizes the results as aligned heatmaps.
+
+## Installation
+
+OmniCorr can be installed from Bioconductor once the package is accepted:
+
+```{r installation, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("OmniCorr")
+```
+
+Load the package:
+
 ```{r setup}
 library(OmniCorr)
 ```
+
+## Input data
+
+OmniCorr expects numeric matrices or data frames with samples in rows and features in columns.
+
+All omics layers should contain the same samples in the same order.
+
+For this example, we generate two small simulated omics datasets containing six samples.
+
+```{r example-data}
+set.seed(123)
+
+samples <- paste0("Sample", 1:6)
+
+reference_layer <- matrix(
+  rnorm(6 * 5),
+  nrow = 6,
+  dimnames = list(samples, paste0("Gene", 1:5))
+)
+
+comparison_layer <- matrix(
+  rnorm(6 * 4),
+  nrow = 6,
+  dimnames = list(samples, paste0("Metabolite", 1:4))
+)
+```
+
+## Calculate correlations
+
+The `calculate_correlations()` function calculates correlations between features from two omics layers.
+
+```{r correlations}
+cor_results <- calculate_correlations(
+  df1 = reference_layer,
+  df2 = comparison_layer,
+  method = "pearson",
+  adjust_method = "fdr",
+  show_significance = "stars"
+)
+
+cor_results$correlation
+```
+
+Positive correlations indicate that two features tend to increase together, whereas negative correlations indicate that one tends to decrease as the other increases. Correlations do not establish causation.
+
+## Multi-omics visualization
+
+The `run_omnicorr()` function combines a reference omics layer with one or more comparison layers and visualizes the results as aligned heatmaps.
+
+```{r omnicorr-heatmap, fig.width=9, fig.height=6}
+heatmap_result <- run_omnicorr(
+  reference_layer = reference_layer,
+  comparison_layers = list(Metabolomics = comparison_layer),
+  reference_name = "Transcriptomics",
+  method = "pearson",
+  cluster_reference_rows = FALSE,
+  cluster_reference_columns = FALSE
+)
+
+ComplexHeatmap::draw(heatmap_result)
+```
+
+The reference heatmap displays the reference features across samples, while the correlation heatmap shows associations between reference features and features from the comparison layer.
+
+For a more detailed biological example using salmon multi-omics data, see the `salmon_workflow` vignette.
+
+## Session information
 
 ```{r session-info}
 sessionInfo()

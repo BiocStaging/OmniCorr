@@ -11,10 +11,10 @@ run_omnicorr(
   reference_name = "Reference Layer",
   comparison_names = NULL,
   metadata_name = "Metadata",
-  method = "pearson",
-  adjust_method = "fdr",
-  use = "all.obs",
-  show_significance = "stars",
+  method = c("pearson", "spearman", "kendall"),
+  adjust_method = c("fdr", setdiff(stats::p.adjust.methods, "fdr")),
+  use = c("all.obs", "pairwise.complete.obs"),
+  show_significance = c("stars", "p_value", "correlation"),
   cluster_reference_rows = TRUE,
   cluster_reference_columns = TRUE,
   show_row_names = TRUE,
@@ -29,35 +29,45 @@ run_omnicorr(
 
 \item{comparison_layers}{Named list of numeric matrices/data.frames.}
 
-\item{metadata}{Optional numeric matrix/data.frame (samples x variables).}
+\item{metadata}{Optional numeric matrix/data.frame (samples x variables).
+Default is NULL.}
 
-\item{reference_name}{Title for the reference heatmap.}
+\item{reference_name}{Title for the reference heatmap.
+Default is "Reference Layer".}
 
-\item{comparison_names}{Optional titles for comparison heatmaps.}
+\item{comparison_names}{Optional titles for comparison heatmaps.
+Default is NULL.}
 
-\item{metadata_name}{Title for metadata heatmap.}
+\item{metadata_name}{Title for metadata heatmap. Default is "Metadata".}
 
-\item{method}{Correlation method: \code{"pearson"}, \code{"spearman"}, \code{"kendall"}.}
+\item{method}{Correlation method: "pearson", "spearman", or "kendall".
+Default is "pearson".}
 
-\item{adjust_method}{P-value correction method (\code{stats::p.adjust.methods}).}
+\item{adjust_method}{P-value correction method (stats::p.adjust.methods).
+Default is "fdr".}
 
-\item{use}{Missing value handling strategy (\code{"all.obs"} or \code{"pairwise.complete.obs"}).}
+\item{use}{Missing value handling: "all.obs" or "pairwise.complete.obs".
+Default is "all.obs". If missing values are detected, the function
+automatically switches to "pairwise.complete.obs" with a warning.}
 
-\item{show_significance}{\code{"stars"}, \code{"p_value"}, or \code{"correlation"}.}
+\item{show_significance}{"stars", "p_value", or "correlation".
+Default is "stars".}
 
-\item{cluster_reference_rows}{Cluster reference features.}
+\item{cluster_reference_rows}{Cluster reference features.
+Default is TRUE.}
 
-\item{cluster_reference_columns}{Cluster reference samples.}
+\item{cluster_reference_columns}{Cluster reference samples.
+Default is TRUE.}
 
-\item{show_row_names}{Logical; display row labels.}
+\item{show_row_names}{Logical; display row labels. Default is TRUE.}
 
-\item{show_column_names}{Logical; display column labels.}
+\item{show_column_names}{Logical; display column labels. Default is TRUE.}
 
-\item{font_size}{Font size for row/column labels.}
+\item{font_size}{Font size for row/column labels. Default is 8.}
 
-\item{star_font_size}{Font size for cell annotations.}
+\item{star_font_size}{Font size for cell annotations. Default is 8.}
 
-\item{verbose}{Print progress messages.}
+\item{verbose}{Print progress messages. Default is TRUE.}
 }
 \value{
 Invisibly returns a \code{ComplexHeatmap::HeatmapList}.
@@ -73,19 +83,26 @@ layers and metadata are aligned to the same reference feature order to
 ensure consistent interpretation across panels.
 }
 \examples{
+# Create example datasets with matching sample IDs
+set.seed(123)
+samples <- paste0("Sample", 1:10)
+
 reference <- matrix(
-  rnorm(20),
-  nrow = 5,
-  dimnames = list(paste0("S", 1:5), paste0("Gene", 1:4))
-)
-comparison <- matrix(
-  rnorm(15),
-  nrow = 5,
-  dimnames = list(paste0("S", 1:5), paste0("Taxon", 1:3))
-)
-result <- run_omnicorr(
-  reference_layer = reference,
-  comparison_layers = list(Microbiome = comparison)
+  rnorm(10 * 5),
+  nrow = 10,
+  dimnames = list(samples, paste0("Ref", 1:5))
 )
 
+comparison <- matrix(
+  rnorm(10 * 4),
+  nrow = 10,
+  dimnames = list(samples, paste0("Comp", 1:4))
+)
+
+# Generate the multi-omics heatmap
+heatmap <- run_omnicorr(
+  reference_layer = reference,
+  comparison_layers = list(Proteomics = comparison),
+  verbose = FALSE
+)
 }

@@ -18,6 +18,21 @@ Authors@R:
         person(
             "Wanxin", "Lai",
             role = "aut"
+        ),
+        person(
+            given = "Research Council of Norway",
+            role = "fnd",
+            comment = "Project 300846"
+        ),
+        person(
+            given = "European Union",
+            role = "fnd",
+            comment = "Horizon 2020 ERA-Net Cofund BlueBio (311913); MSCA DN HoloGen (101169005)"
+        ),
+        person(
+            given = "Novo Nordisk Foundation",
+            role = "fnd",
+            comment = "Project 0054575-SuPAcow"
         )
     )
 Description: OmniCorr is an R package for correlation-based integration and
@@ -53,6 +68,7 @@ biocViews:
     Metabolomics,
     Metagenomics,
     Microbiome,
+    Network,
     NetworkInference,
     Preprocessing,
     Proteomics,
@@ -61,4 +77,4 @@ biocViews:
 URL: https://github.com/veronicaquarato/OmniCorr
 BugReports: https://github.com/veronicaquarato/OmniCorr/issues
 Config/testthat/edition: 3
-Config/roxygen2/version: 8.1.0
+Config/roxygen2/version: 8.1.1

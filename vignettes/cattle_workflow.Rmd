@@ -1,0 +1,122 @@
+---
+title: "Cattle case study: Host-microbiome correlations"
+author: "OmniCorr developers"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Cattle case study: Host-microbiome correlations}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 9,
+  fig.height = 7
+)
+```
+
+## Overview
+
+This vignette demonstrates the application of OmniCorr to cattle
+host–microbiome multi-omics data.
+
+The analysis integrates six proteomics layers:
+
+- Archaeal and bacterial proteomics (reference layer)
+- Ciliate proteomics
+- Fungal proteomics
+- Metazoan proteomics from rumen digesta
+- Host liver proteomics
+- Host rumen wall proteomics
+
+This vignette uses precomputed WGCNA module eigengenes to demonstrate the
+integration of microbial and host proteomics data using OmniCorr.
+Details about data processing and sample alignment are provided in the
+Data provenance section.
+
+## Data provenance
+
+The module eigengenes used in this vignette were generated from the
+original cattle multi-omics datasets using the WGCNA workflow provided
+in `Case_Study_2/Cattle_OmniCorr/Rumen_OmniCorr.Rmd`.
+
+WGCNA was performed separately for each omics layer. The resulting
+module eigengenes were aligned using sample identifiers, retaining
+the 20 samples shared across all six omics layers.
+
+The processed eigengenes are distributed with OmniCorr as
+`cattle_module_eigengenes.rds` to make this vignette reproducible
+without rerunning the computationally intensive WGCNA analysis.
+
+The original WGCNA workflow is retained in the project repository
+for reference and reproducibility.
+
+## Load the data
+
+```{r load-data}
+library(OmniCorr)
+
+cattle_file <- system.file(
+  "extdata",
+  "cattle_module_eigengenes.rds",
+  package = "OmniCorr",
+  mustWork = TRUE
+)
+
+cattle_MEs <- readRDS(cattle_file)
+
+sapply(cattle_MEs, dim)
+```
+
+## Calculate correlations
+
+We first calculate correlations between the archaeal/bacterial
+module eigengenes and the rumen digesta metazoan module eigengenes.
+
+```{r correlations}
+cor_results <- calculate_correlations(
+  df1 = cattle_MEs$Archbac,
+  df2 = cattle_MEs$Metazoa,
+  method = "pearson",
+  show_significance = "stars"
+)
+
+head(cor_results$correlation)
+```
+
+## Integrate multiple omics layers
+
+We use the archaeal/bacterial proteomics modules as the central
+reference layer and compare them with the other five layers.
+
+```{r omnicorr-heatmap, fig.width=11, fig.height=8}
+comparison_layers <- cattle_MEs[
+  c("Ciliates", "Fungi", "Metazoa", "Liver", "Wall")
+]
+
+omnicorr_plot <- run_omnicorr(
+  reference_layer = cattle_MEs$Archbac,
+  comparison_layers = comparison_layers
+)
+
+ComplexHeatmap::draw(omnicorr_plot)
+```
+
+## Interpretation
+
+The resulting heatmap visualizes correlations between
+archaeal/bacterial proteomics modules and modules from microbial
+and host proteomics layers.
+
+Positive and negative correlations indicate associations between
+module eigengenes. These relationships may suggest coordinated
+biological processes but do not establish direct interactions
+or causality.
+
+## Session information
+
+```{r session-info}
+sessionInfo()
+```

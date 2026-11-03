@@ -22,26 +22,17 @@
 #'
 #' @source Information was collected from the study samples.
 #'
-#' @return A data frame containing sample metadata.
+#' @details
+#' Sample metadata from the salmon multi-omics study.
+#' The dataset contains 36 samples and 14 variables.
+#' Rows represent samples, identified by sample IDs.
+#'
+#' @name metadata
+#'
+#' @return A data frame containing 36 samples (rows) and
+#' 14 metadata variables (columns).
 #'
 #' @examples
-#' # View the first few rows of the metadata
+#' data("metadata", package = "OmniCorr")
 #' head(metadata)
-#'
-#' @export
-metadata <- data.frame(
-  BW = numeric(),
-  Length = numeric(),
-  Sex = character(),
-  Gut_struc = character(),
-  Gut_light = character(),
-  Anus_bleed = character(),
-  Gut_bleed = character(),
-  Fat_Score = numeric(),
-  Heart_Sco = numeric(),
-  softliver = character(),
-  patchy_liver = character(),
-  Liver_Sco = numeric(),
-  HSI = numeric(),
-  CSI = numeric()
-)
+NULL

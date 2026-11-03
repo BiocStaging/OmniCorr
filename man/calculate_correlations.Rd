@@ -7,10 +7,10 @@
 calculate_correlations(
   df1,
   df2,
-  method = "pearson",
-  adjust_method = "fdr",
-  use = "all.obs",
-  show_significance = "stars"
+  method = c("pearson", "spearman", "kendall"),
+  adjust_method = c("fdr", setdiff(stats::p.adjust.methods, "fdr")),
+  use = c("all.obs", "pairwise.complete.obs"),
+  show_significance = c("stars", "p_value", "correlation")
 )
 }
 \arguments{
@@ -28,11 +28,11 @@ Other options include "spearman" and "kendall".}
 testing. Default is "fdr". If "none", no adjustment is applied.
 Supports all methods from \code{p.adjust.methods}.}
 
-\item{use}{Handling of missing data. One of "all.obs" or
-"pairwise.complete.obs".}
+\item{use}{Handling of missing data. Default is "all.obs".
+One of "all.obs" or "pairwise.complete.obs".}
 
 \item{show_significance}{How to represent significance in the output.
-One of "stars", "p_value", or "correlation".}
+Default is "stars". One of "stars", "p_value", or "correlation".}
 }
 \value{
 A list containing:
