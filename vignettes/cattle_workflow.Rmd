@@ -96,12 +96,10 @@ comparison_layers <- cattle_MEs[
   c("Ciliates", "Fungi", "Metazoa", "Liver", "Wall")
 ]
 
-omnicorr_plot <- run_omnicorr(
+run_omnicorr(
   reference_layer = cattle_MEs$Archbac,
   comparison_layers = comparison_layers
 )
-
-ComplexHeatmap::draw(omnicorr_plot)
 ```
 
 ## Interpretation

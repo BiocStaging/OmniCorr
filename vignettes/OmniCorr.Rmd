@@ -115,7 +115,7 @@ Positive correlations indicate that two features tend to increase together, wher
 The `run_omnicorr()` function combines a reference omics layer with one or more comparison layers and visualizes the results as aligned heatmaps.
 
 ```{r omnicorr-heatmap, fig.width=9, fig.height=6}
-heatmap_result <- run_omnicorr(
+run_omnicorr(
   reference_layer = reference_layer,
   comparison_layers = list(Metabolomics = comparison_layer),
   reference_name = "Transcriptomics",
@@ -123,8 +123,6 @@ heatmap_result <- run_omnicorr(
   cluster_reference_rows = FALSE,
   cluster_reference_columns = FALSE
 )
-
-ComplexHeatmap::draw(heatmap_result)
 ```
 
 The reference heatmap displays the reference features across samples, while the correlation heatmap shows associations between reference features and features from the comparison layer.
