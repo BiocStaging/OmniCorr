@@ -1,6 +1,6 @@
 bibentry(
   bibtype = "Article",
-  title = "OmniCorr: An R package for visualizing putative host-microbiome interactions using multi-omics data",
+  title = "OmniCorr: an R-package for visualizing putative host-microbiome interactions using multi-omics data",
   author = c(
     person("Shashank", "Gupta"),
     person("Veronica", "Quarato"),

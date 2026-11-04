@@ -202,21 +202,48 @@ plot_grid(
 ### Bonus: Correlation with metadata
 
 ```{r metadata-correlation}
+# Exclude Anus_bleed because it has only 7 non-missing observations
+metadata_filtered <- metadata[
+  , colnames(metadata) != "Anus_bleed",
+  drop = FALSE
+]
+
 corr_meta <- calculate_correlations(
   df1 = Transcriptomics,
-  df2 = metadata,
+  df2 = metadata_filtered,
   use = "pairwise.complete.obs",
   show_significance = "stars"
 )
 
 pheatmap(
   corr_meta$correlation,
-  color         = heatmap_colors,
-  cluster_rows  = dendro,
+  color = heatmap_colors,
+  cluster_rows = dendro,
   display_numbers = corr_meta$signif_matrix,
-  breaks        = seq(-1, 1, length.out = 51),
+  breaks = seq(-1, 1, length.out = 51),
   show_rownames = TRUE,
-  main          = "Environmental variables / Metadata"
+  main = "Environmental variables / Metadata"
+)
+```
+
+## Complete multi-omics integration with OmniCorr
+
+The `run_omnicorr()` function integrates the reference layer,
+comparison layers, and metadata into a combined heatmap.
+
+```{r salmon-omnicorr}
+salmon_heatmap <- run_omnicorr(
+  reference_layer = Transcriptomics,
+  comparison_layers = list(
+    Metagenomics = Metagenomics,
+    Metatranscriptomics = Metatranscriptomics
+  ),
+  metadata = metadata_filtered,
+  reference_name = "Transcriptomics",
+  metadata_name = "Metadata",
+  use = "pairwise.complete.obs",
+  show_significance = "stars",
+  show_row_names = FALSE
 )
 ```
 
