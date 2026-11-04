@@ -38,3 +38,15 @@ The executable example is provided in the `vignettes` directory of the OmniCorr 
 Both paths are relative to the root directory of the OmniCorr repository.
 
 This allows the OmniCorr analysis to be reproduced using the distributed processed data without access to the original proteomics datasets.
+
+### Reproducing the processed cattle dataset
+
+The processed module eigengenes distributed with OmniCorr can be regenerated from the original WGCNA results using:
+
+`inst/scripts/generate_cattle_data.R`
+
+Run this script from the root directory of the OmniCorr repository. It loads `Case_Study_2/Cattle_OmniCorr/Modules_rumen.RData`, extracts the module eigengenes from all six omics layers, and retains the 20 samples shared across the layers.
+
+The resulting dataset is saved as `inst/extdata/cattle_module_eigengenes.rds`.
+
+The regenerated dataset was verified to be identical to the distributed dataset.

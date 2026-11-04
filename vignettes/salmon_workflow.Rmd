@@ -85,12 +85,12 @@ all(
 If order is wrong / samples are missing → use the helper function:
 
 ```{r fix-sample-order}
-df_list <- CheckSampleOrder(Transcriptomics, Metagenomics)
+df_list <- check_sample_order(Transcriptomics, Metagenomics)
 
 Transcriptomics <- df_list$df1
 Metagenomics <- df_list$df2
 
-df_list <- CheckSampleOrder(Transcriptomics, Metatranscriptomics)
+df_list <- check_sample_order(Transcriptomics, Metatranscriptomics)
 
 Transcriptomics <- df_list$df1
 Metatranscriptomics <- df_list$df2

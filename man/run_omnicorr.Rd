@@ -25,12 +25,23 @@ run_omnicorr(
 )
 }
 \arguments{
-\item{reference_layer}{Numeric matrix/data.frame (samples x features).}
+\item{reference_layer}{A matrix, data frame, or SummarizedExperiment
+containing the reference omics dataset. For matrices and data frames,
+rows represent samples and columns represent features. For
+SummarizedExperiment objects, the first assay is extracted and
+transposed automatically.}
 
-\item{comparison_layers}{Named list of numeric matrices/data.frames.}
+\item{comparison_layers}{A named list of matrices, data frames, or
+SummarizedExperiment objects containing the omics datasets to
+compare with the reference layer. Different input types can be
+combined in the same analysis. SummarizedExperiment objects are
+converted using their first assay.}
 
-\item{metadata}{Optional numeric matrix/data.frame (samples x variables).
-Default is NULL.}
+\item{metadata}{Optional numeric matrix or data frame containing sample
+metadata (samples in rows, variables in columns). Row names must match
+the reference layer sample identifiers in the same order.
+When provided, metadata variables are correlated with reference features
+and displayed in an additional heatmap. Default is NULL.}
 
 \item{reference_name}{Title for the reference heatmap.
 Default is "Reference Layer".}
@@ -81,6 +92,17 @@ The reference layer is displayed as an expression heatmap with optional
 clustering of features and samples. Correlation heatmaps for comparison
 layers and metadata are aligned to the same reference feature order to
 ensure consistent interpretation across panels.
+}
+\details{
+All omics layers must contain the same samples in the same order.
+Sample identifiers are checked using row names after conversion.
+For SummarizedExperiment objects, these identifiers correspond
+to the column names of the original object.
+
+If a SummarizedExperiment contains multiple assays, only the first
+assay is used. To analyze another assay, extract it explicitly
+using SummarizedExperiment::assay() and transpose it before
+passing it to run_omnicorr().
 }
 \examples{
 # Create example datasets with matching sample IDs

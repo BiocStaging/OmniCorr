@@ -16,20 +16,42 @@ knitr::opts_chunk$set(
 
 ## Introduction
 
-OmniCorr is an R package for exploring relationships between multiple omics datasets through correlation analysis and visualization.
+OmniCorr is an R package for exploring associations between multiple omics datasets through correlation analysis and visualization.
 
-The package integrates a reference omics layer with one or more comparison layers and optional sample metadata. Results are visualized as aligned heatmaps using the `ComplexHeatmap` package.
+The package integrates a reference omics layer with one or more comparison layers and optional sample metadata. It calculates correlations between features across datasets and visualizes the results as aligned heatmaps using the `ComplexHeatmap` package.
+
+OmniCorr can be used to investigate potential relationships between different molecular layers, such as transcriptomics, proteomics, metabolomics, and metagenomics.
 
 The main functions are:
 
-- `calculate_correlations()`: Calculates correlations between two datasets.
-- `run_omnicorr()`: Integrates multiple datasets and visualizes the results as aligned heatmaps.
+- `calculate_correlations()`: Calculates correlation coefficients and associated p-values between features from two datasets, with optional multiple-testing correction.
+- `run_omnicorr()`: Integrates multiple omics layers and optional metadata, displaying their relationships as aligned heatmaps.
+
+The general workflow consists of:
+
+1. Preparing omics datasets with matching sample identifiers.
+2. Selecting a reference omics layer and one or more comparison layers.
+3. Calculating correlations between features.
+4. Visualizing the results using aligned heatmaps.
+
+The resulting associations can help identify potentially related biological features, although correlations alone do not establish causal relationships.
 
 ## Installation
 
-OmniCorr can be installed from Bioconductor once the package is accepted:
+OmniCorr is currently under review for inclusion in Bioconductor.
 
-```{r installation, eval=FALSE}
+During development, the package can be installed from GitHub:
+
+```{r github-installation, eval=FALSE}
+if (!requireNamespace("remotes", quietly = TRUE))
+    install.packages("remotes")
+
+remotes::install_github("veronicaquarato/OmniCorr")
+```
+
+Once OmniCorr is accepted and available in a Bioconductor release, it can be installed using:
+
+```{r bioconductor-installation, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
@@ -44,9 +66,11 @@ library(OmniCorr)
 
 ## Input data
 
-OmniCorr expects numeric matrices or data frames with samples in rows and features in columns.
+OmniCorr accepts numeric matrices, data frames, and `SummarizedExperiment` objects.
 
-All omics layers should contain the same samples in the same order.
+For matrices and data frames, samples must be arranged in rows and features in columns. For `SummarizedExperiment` objects, features are stored in rows and samples in columns; OmniCorr automatically converts these objects to the required orientation.
+
+All omics layers must contain the same samples in the same order. Sample identifiers should be consistent across datasets to ensure correct alignment.
 
 For this example, we generate two small simulated omics datasets containing six samples.
 

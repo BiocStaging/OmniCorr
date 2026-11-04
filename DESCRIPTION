@@ -50,6 +50,7 @@ Depends:
     R (>= 4.6.0)
 Imports: 
     ComplexHeatmap,
+    SummarizedExperiment,
     circlize,
     RColorBrewer,
     WGCNA,

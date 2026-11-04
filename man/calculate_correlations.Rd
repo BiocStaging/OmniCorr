@@ -2,7 +2,7 @@
 % Please edit documentation in R/calculate_correlations.R
 \name{calculate_correlations}
 \alias{calculate_correlations}
-\title{Calculate correlation between two data frames}
+\title{Calculate correlations between two omics datasets}
 \usage{
 calculate_correlations(
   df1,
@@ -14,12 +14,13 @@ calculate_correlations(
 )
 }
 \arguments{
-\item{df1}{A data frame or matrix containing the first set of variables
-to be correlated. Rows are samples, columns are variables
-(e.g., genes, proteins, metabolites).}
+\item{df1}{A data frame, matrix, or SummarizedExperiment containing
+the first set of variables. For matrices and data frames, rows are
+samples and columns are variables. For SummarizedExperiment objects,
+the first assay is extracted and transposed automatically.}
 
-\item{df2}{A data frame or matrix containing the second set of variables
-to be correlated. Rows are samples, columns are variables.}
+\item{df2}{A data frame, matrix, or SummarizedExperiment containing
+the second set of variables, following the same conventions as df1.}
 
 \item{method}{The correlation method to be used. Default is "pearson".
 Other options include "spearman" and "kendall".}
@@ -42,8 +43,9 @@ A list containing:
 \item{signif_matrix}{Matrix of significance stars, p-values, or correlations.}
 }
 \description{
-This function calculates the correlation matrix between the columns
-of two data frames.
+This function calculates correlations between variables from two
+datasets provided as data frames, matrices, or SummarizedExperiment
+objects.
 }
 \details{
 Pearson and Spearman correlations are computed using

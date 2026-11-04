@@ -1,14 +1,16 @@
-#' Calculate correlation between two data frames
+#' Calculate correlations between two omics datasets
 #'
 #' @description
-#' This function calculates the correlation matrix between the columns
-#' of two data frames.
+#' This function calculates correlations between variables from two
+#' datasets provided as data frames, matrices, or SummarizedExperiment
+#' objects.
 #'
-#' @param df1 A data frame or matrix containing the first set of variables
-#'   to be correlated. Rows are samples, columns are variables
-#'   (e.g., genes, proteins, metabolites).
-#' @param df2 A data frame or matrix containing the second set of variables
-#'   to be correlated. Rows are samples, columns are variables.
+#' @param df1 A data frame, matrix, or SummarizedExperiment containing
+#'   the first set of variables. For matrices and data frames, rows are
+#'   samples and columns are variables. For SummarizedExperiment objects,
+#'   the first assay is extracted and transposed automatically.
+#' @param df2 A data frame, matrix, or SummarizedExperiment containing
+#'   the second set of variables, following the same conventions as df1.
 #' @param method The correlation method to be used. Default is "pearson".
 #'   Other options include "spearman" and "kendall".
 #' @param adjust_method Method for adjusting the p-values for multiple
@@ -51,29 +53,44 @@ calculate_correlations <- function(
     use = c("all.obs", "pairwise.complete.obs"),
     show_significance = c("stars", "p_value", "correlation")
 ) {
-  
+
+  # Convert SummarizedExperiment inputs to samples x features matrices
+  if (inherits(df1, "SummarizedExperiment")) {
+    df1 <- t(as.matrix(SummarizedExperiment::assay(df1)))
+  }
+
+  if (inherits(df2, "SummarizedExperiment")) {
+    df2 <- t(as.matrix(SummarizedExperiment::assay(df2)))
+  }
+
   if (!is.data.frame(df1) && !is.matrix(df1)) {
-    stop("df1 must be a data frame or matrix.")
+    stop("df1 must be a data frame, matrix, or SummarizedExperiment.")
   }
+
   if (!is.data.frame(df2) && !is.matrix(df2)) {
-    stop("df2 must be a data frame or matrix.")
+    stop("df2 must be a data frame, matrix, or SummarizedExperiment.")
   }
+
   if (nrow(df1) != nrow(df2)) {
     stop("df1 and df2 must have the same number of rows (samples).")
   }
-  
+  if (!is.null(rownames(df1)) && !is.null(rownames(df2)) &&
+      !identical(rownames(df1), rownames(df2))) {
+    stop("Sample identifiers in df1 and df2 must match and be in the same order.")
+  }
+
   method <- match.arg(method)
   use <- match.arg(use)
   adjust_method <- match.arg(adjust_method)
   show_significance <- match.arg(show_significance)
-  
+
   combined_data <- cbind(df1, df2)
-  
+
   if (use == "all.obs" &&
       !all(stats::complete.cases(combined_data))) {
     stop("Missing values present but use = 'all.obs'.")
   }
-  
+
   if (method %in% c("pearson", "spearman")) {
     res <- WGCNA::corAndPvalue(
       df1,
@@ -90,14 +107,14 @@ calculate_correlations <- function(
       method = method,
       use = use
     )
-    
+
     p_val_mat <- matrix(
       NA_real_,
       nrow = ncol(df1),
       ncol = ncol(df2),
       dimnames = list(colnames(df1), colnames(df2))
     )
-    
+
     for (i in seq_len(ncol(df1))) {
       for (j in seq_len(ncol(df2))) {
         p_val_mat[i, j] <- stats::cor.test(
@@ -108,7 +125,7 @@ calculate_correlations <- function(
       }
     }
   }
-  
+
   if (adjust_method != "none") {
     p_val_adj_mat <- matrix(
       stats::p.adjust(p_val_mat, method = adjust_method),
@@ -118,7 +135,7 @@ calculate_correlations <- function(
   } else {
     p_val_adj_mat <- p_val_mat
   }
-  
+
   if (show_significance == "stars") {
     signif_matrix <- matrix(
       "",
@@ -126,7 +143,7 @@ calculate_correlations <- function(
       ncol = ncol(p_val_adj_mat),
       dimnames = dimnames(p_val_adj_mat)
     )
-    
+
     signif_matrix[p_val_adj_mat <= 0.001] <- "***"
     signif_matrix[
       p_val_adj_mat <= 0.01 & p_val_adj_mat > 0.001
@@ -134,13 +151,13 @@ calculate_correlations <- function(
     signif_matrix[
       p_val_adj_mat <= 0.05 & p_val_adj_mat > 0.01
     ] <- "*"
-    
+
   } else if (show_significance == "p_value") {
     signif_matrix <- p_val_adj_mat
   } else {
     signif_matrix <- cor_mat
   }
-  
+
   list(
     correlation = round(cor_mat, 3),
     p_value = p_val_mat,

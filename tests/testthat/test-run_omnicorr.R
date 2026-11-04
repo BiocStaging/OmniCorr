@@ -77,3 +77,51 @@ test_that("run_omnicorr requires named comparison layers", {
     "comparison_layers must have names"
   )
 })
+
+test_that("run_omnicorr supports SummarizedExperiment", {
+
+  set.seed(123)
+
+  samples <- paste0("S", 1:10)
+
+  mat1 <- matrix(
+    rnorm(50),
+    nrow = 5,
+    dimnames = list(paste0("Gene", 1:5), samples)
+  )
+
+  mat2 <- matrix(
+    rnorm(40),
+    nrow = 4,
+    dimnames = list(paste0("Protein", 1:4), samples)
+  )
+
+  se1 <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = mat1)
+  )
+
+  se2 <- SummarizedExperiment::SummarizedExperiment(
+    assays = list(counts = mat2)
+  )
+
+  # Verify that the function accepts SummarizedExperiment inputs
+  ht <- run_omnicorr(
+    reference_layer = se1,
+    comparison_layers = list(Proteomics = se2),
+    verbose = FALSE
+  )
+
+  expect_s4_class(ht, "HeatmapList")
+
+  # Verify that misaligned samples are rejected
+  se2_wrong <- se2[, 10:1]
+
+  expect_error(
+    run_omnicorr(
+      reference_layer = se1,
+      comparison_layers = list(Proteomics = se2_wrong),
+      verbose = FALSE
+    ),
+    "Sample order mismatch"
+  )
+})

@@ -1,4 +1,4 @@
-test_that("CheckSampleOrder correctly aligns sample order", {
+test_that("check_sample_order correctly aligns sample order", {
   
   df1 <- matrix(
     1:6,
@@ -12,7 +12,7 @@ test_that("CheckSampleOrder correctly aligns sample order", {
     dimnames = list(c("S3", "S1", "S2"), c("C", "D"))
   )
   
-  result <- CheckSampleOrder(df1, df2)
+  result <- check_sample_order(df1, df2)
   
   expect_identical(
     rownames(result$df2),
@@ -26,7 +26,7 @@ test_that("CheckSampleOrder correctly aligns sample order", {
 })
 
 
-test_that("CheckSampleOrder stops when sample sets do not match", {
+test_that("check_sample_order stops when sample sets do not match", {
   
   df1 <- matrix(
     1:4,
@@ -41,13 +41,13 @@ test_that("CheckSampleOrder stops when sample sets do not match", {
   )
   
   expect_error(
-    CheckSampleOrder(df1, df2),
+    check_sample_order(df1, df2),
     "Sample sets do not match"
   )
 })
 
 
-test_that("CheckSampleOrder stops when sample names are duplicated", {
+test_that("check_sample_order stops when sample names are duplicated", {
   
   df1 <- matrix(
     1:4,
@@ -62,7 +62,7 @@ test_that("CheckSampleOrder stops when sample names are duplicated", {
   )
   
   expect_error(
-    CheckSampleOrder(df1, df2),
+    check_sample_order(df1, df2),
     "Duplicate sample names detected"
   )
 })

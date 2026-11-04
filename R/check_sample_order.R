@@ -13,11 +13,11 @@
 #'               dimnames = list(c("S1", "S2", "S3"), c("A", "B")))
 #' df2 <- matrix(7:12, nrow = 3,
 #'               dimnames = list(c("S3", "S1", "S2"), c("C", "D")))
-#' result <- CheckSampleOrder(df1, df2)
+#' result <- check_sample_order(df1, df2)
 #' result$df2
 #'
 #' @export
-CheckSampleOrder <- function(df1, df2) {
+check_sample_order <- function(df1, df2) {
 
   # Validate inputs
   if (is.null(rownames(df1)) || is.null(rownames(df2))) {
