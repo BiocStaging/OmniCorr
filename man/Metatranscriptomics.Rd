@@ -3,18 +3,28 @@
 \docType{data}
 \name{Metatranscriptomics}
 \alias{Metatranscriptomics}
-\title{Example Metatranscriptomics dataset}
+\title{Salmon Metatranscriptomics Dataset}
 \format{
-A numeric matrix with samples as rows and features as columns.
+A data.frame with 36 samples (rows) and 11 module
+eigengenes (columns).
 }
 \source{
-Derived from published cow rumen multi-omics analysis.
+Salmon metatranscriptomics data provided by Shashank Gupta.
+The input dataset is available in
+\code{raw-data/metatranscriptomics/metatranscriptomics.rds}.
+The reproducibility script is available in
+\code{inst/scripts/generate_salmon_metatranscriptomics.R}.
 }
 \usage{
 data(Metatranscriptomics)
 }
 \description{
-A processed metatranscriptomics feature-abundance matrix used as an
-example input for OmniCorr.
+A processed metatranscriptomics dataset containing WGCNA module
+eigengenes derived from salmon metatranscriptomic data.
+}
+\details{
+The original count data were variance-stabilized using DESeq2,
+followed by weighted gene co-expression network analysis (WGCNA).
+Module eigengenes were averaged at the tank level.
 }
 \keyword{datasets}
