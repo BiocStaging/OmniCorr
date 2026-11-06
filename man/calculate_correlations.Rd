@@ -46,6 +46,16 @@ A list containing:
 This function calculates correlations between variables from two
 datasets provided as data frames, matrices, or SummarizedExperiment
 objects.
+
+#' @details
+SummarizedExperiment inputs are supported by extracting and
+transposing their first assay. Assays are converted to ordinary
+in-memory matrices before correlation analysis, including delayed
+or disk-backed assays.
+
+This function is primarily intended for correlations between
+module eigengenes or other reduced-dimensional omics features.
+Large feature matrices may require substantial memory.
 }
 \details{
 Pearson and Spearman correlations are computed using

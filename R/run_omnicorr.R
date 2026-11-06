@@ -19,6 +19,12 @@
 #' assay is used. To analyze another assay, extract it explicitly
 #' using SummarizedExperiment::assay() and transpose it before
 #' passing it to run_omnicorr().
+#' 
+#' SummarizedExperiment assays are converted to ordinary in-memory
+#' matrices before analysis. Delayed or disk-backed assays are therefore
+#' fully loaded into memory. OmniCorr is primarily intended for
+#' integrating module eigengenes or other reduced-dimensional omics
+#' representations rather than large, unprocessed feature matrices.
 #'
 #' @param reference_layer A matrix, data frame, or SummarizedExperiment
 #'   containing the reference omics dataset. For matrices and data frames,

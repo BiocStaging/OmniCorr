@@ -103,6 +103,12 @@ If a SummarizedExperiment contains multiple assays, only the first
 assay is used. To analyze another assay, extract it explicitly
 using SummarizedExperiment::assay() and transpose it before
 passing it to run_omnicorr().
+
+SummarizedExperiment assays are converted to ordinary in-memory
+matrices before analysis. Delayed or disk-backed assays are therefore
+fully loaded into memory. OmniCorr is primarily intended for
+integrating module eigengenes or other reduced-dimensional omics
+representations rather than large, unprocessed feature matrices.
 }
 \examples{
 # Create example datasets with matching sample IDs
