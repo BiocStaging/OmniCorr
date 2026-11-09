@@ -1,18 +1,21 @@
-.Rproj.user
-inst/doc
+# RStudio and R session files
+.Rproj.user/
 .Rhistory
 .Rdata
 .httr-oauth
-.DS_Store
-OmniCorr.BiocCheck/
 OmniCorr.Rproj
 
+# macOS files
+.DS_Store
+
+# Generated documentation and build files
+inst/doc/
+doc/
+Meta/
 *.Rcheck/
+*.BiocCheck/
 *.tar.gz
 
+# Project directories excluded from Git
 Case_Study_2/
 raw-data/
-.DS_Store
-OmniCorr.BiocCheck/
-/doc/
-/Meta/
