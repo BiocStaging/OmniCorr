@@ -1,3 +1,7 @@
+# OmniCorr 0.99.2
+
+* Fixed CITATION file encoding compatibility with Bioconductor checks.
+
 # OmniCorr 0.99.1
 
 * Updated documentation and clarified memory limitations for

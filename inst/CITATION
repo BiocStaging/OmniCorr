@@ -7,7 +7,7 @@ bibentry(
     person("Wanxin", "Lai"),
     person("Carl M", "Kobel"),
     person("Velma T E", "Aho"),
-    person("Arturo", "Vera-Ponce de León"),
+    person("Arturo", "Vera-Ponce de Le\u00F3n"),
     person("Sabina", "Leanti La Rosa"),
     person("Simen R", "Sandve"),
     person("Phillip B", "Pope"),
