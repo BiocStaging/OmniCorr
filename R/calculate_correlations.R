@@ -5,7 +5,7 @@
 #' datasets provided as data frames, matrices, or SummarizedExperiment
 #' objects.
 #' 
-#' #' @details
+#' @details
 #' SummarizedExperiment inputs are supported by extracting and
 #' transposing their first assay. Assays are converted to ordinary
 #' in-memory matrices before correlation analysis, including delayed
